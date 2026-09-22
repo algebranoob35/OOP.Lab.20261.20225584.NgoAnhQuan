@@ -58,4 +58,4 @@ b) Custom texts such as "I do" and "I don't": use showOptionDialog with an
    showConfirmDialog with YES_NO_OPTION. This changes the texts of all
    dialogs shown afterwards.
 
-Reference: Java SE 8 API documentation, class javax.swing.JOptionPane.
+
