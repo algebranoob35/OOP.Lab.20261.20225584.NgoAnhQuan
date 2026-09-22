@@ -1,0 +1,61 @@
+OOP Lab 01 - answers.txt
+========================
+
+Exercise 6.1 - ChoosingOption
+
+Question 1: What happens if users choose "Cancel"?
+
+JOptionPane.showConfirmDialog(null, message) shows three buttons (Yes, No,
+Cancel) and returns an int telling which one was clicked:
+    JOptionPane.YES_OPTION    =  0
+    JOptionPane.NO_OPTION     =  1
+    JOptionPane.CANCEL_OPTION =  2
+    JOptionPane.CLOSED_OPTION = -1  (the dialog is closed with the X button or Esc)
+
+The program only checks whether option == JOptionPane.YES_OPTION. Every other
+value, including CANCEL_OPTION, goes to the "No" branch of the conditional
+expression. So when the user chooses "Cancel" (or closes the dialog), the
+program displays "You've chosen: No" and then exits with System.exit(0).
+This message is misleading because the user did not choose "No". To handle
+Cancel correctly, the program must compare option with CANCEL_OPTION (and
+CLOSED_OPTION) separately, for example:
+
+    if (option == JOptionPane.YES_OPTION) {
+        // "Yes"
+    } else if (option == JOptionPane.NO_OPTION) {
+        // "No"
+    } else {
+        // "Cancel" or the dialog was closed
+    }
+
+Question 2: How to customize the options shown to users, e.g. only two
+options "Yes" and "No", or "I do" and "I don't"?
+
+a) Only "Yes" and "No": use the overload of showConfirmDialog that takes an
+   option type, with JOptionPane.YES_NO_OPTION (the other option types are
+   YES_NO_CANCEL_OPTION, which is the default, and OK_CANCEL_OPTION):
+
+    int option = JOptionPane.showConfirmDialog(null,
+            "Do you want to change to the first class ticket?",
+            "Confirm", JOptionPane.YES_NO_OPTION);
+
+b) Custom texts such as "I do" and "I don't": use showOptionDialog with an
+   array of options. Each element of the array becomes a button, and the
+   return value is the index of the clicked button (0 = "I do",
+   1 = "I don't"), or CLOSED_OPTION (-1) if the dialog is closed.
+
+    String[] options = {"I do", "I don't"};
+    int option = JOptionPane.showOptionDialog(null,
+            "Do you want to change to the first class ticket?",
+            "Confirm", JOptionPane.YES_NO_OPTION,
+            JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
+    JOptionPane.showMessageDialog(null, "You've chosen: "
+            + (option == 0 ? "I do" : "I don't"));
+
+   Another way is to change the button texts before showing the dialog:
+   UIManager.put("OptionPane.yesButtonText", "I do") and
+   UIManager.put("OptionPane.noButtonText", "I don't"), then call
+   showConfirmDialog with YES_NO_OPTION. This changes the texts of all
+   dialogs shown afterwards.
+
+Reference: Java SE 8 API documentation, class javax.swing.JOptionPane.

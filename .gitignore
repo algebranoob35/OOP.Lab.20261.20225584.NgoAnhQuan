@@ -1,0 +1,7 @@
+# Bytecode produced by javac / Eclipse
+*.class
+bin/
+
+# Eclipse workspace files (the Eclipse workspace is Lab01 inside this repo)
+.metadata/
+RemoteSystemsTempFiles/
