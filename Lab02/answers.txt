@@ -1,0 +1,116 @@
+OOP Lab 02 - answers.txt
+========================
+Student: Ngo Anh Quan - 20225584
+
+Question 1 (Section 10 - Constructor)
+If you create a constructor method to build a DVD by title then create a
+constructor method to build a DVD by category. Does JAVA allow you to do this?
+
+No. Java distinguishes overloaded methods/constructors only by their
+signature: the number, the types and the order of the parameters. Parameter
+names and return types are not part of the signature.
+
+    public DigitalVideoDisc(String title)    { ... }
+    public DigitalVideoDisc(String category) { ... }
+
+Both constructors have the same signature DigitalVideoDisc(String), so the
+compiler reports "constructor DigitalVideoDisc(String) is already defined in
+class DigitalVideoDisc". Even if it compiled, a call such as
+new DigitalVideoDisc("Animation") would be ambiguous: Java could not know
+whether "Animation" is a title or a category.
+To have both, the signatures must differ, e.g. a different number of
+parameters (title + cost), a different parameter type, or a static factory
+method with a meaningful name such as
+    public static DigitalVideoDisc fromCategory(String category)
+In this lab only the title-only constructor is kept.
+
+
+Question 2 (Section 14.1 - Method overloading)
+Try to add a method addDigitalVideoDisc which allows to pass an arbitrary
+number of arguments for dvd. Compared to an array parameter. What do you
+prefer in this case?
+
+A varargs parameter is written as
+    public void addDigitalVideoDisc(DigitalVideoDisc... dvdList)
+Inside the method dvdList is an ordinary DigitalVideoDisc[]; the compiler
+simply builds the array for the caller. Because of that,
+addDigitalVideoDisc(DigitalVideoDisc[]) and
+addDigitalVideoDisc(DigitalVideoDisc...) have the same signature and cannot
+exist together in one class ("cannot declare both
+addDigitalVideoDisc(DigitalVideoDisc...) and
+addDigitalVideoDisc(DigitalVideoDisc[]) in Cart"). The varargs version is
+therefore left as a comment in Cart.java, next to the array version that the
+lab asks for.
+
+Comparison:
+- Array parameter: the caller must build an array first:
+      cart.addDigitalVideoDisc(new DigitalVideoDisc[] {dvd1, dvd2, dvd3});
+  It fits well when the DVDs are already stored in an array.
+- Varargs: the caller can pass any number of DVDs directly,
+      cart.addDigitalVideoDisc(dvd1, dvd2, dvd3);
+  and can still pass an existing array: cart.addDigitalVideoDisc(dvdArray).
+  Rules: only one varargs parameter per method and it must be the last one;
+  calling it with no argument is allowed (an empty array is passed).
+
+I prefer varargs in this case: it accepts everything the array version
+accepts, and the call is shorter and easier to read. One point to keep in
+mind: when overloads exist, Java picks a fixed-arity method before a varargs
+one, so addDigitalVideoDisc(dvd1, dvd2) still calls the two-parameter
+version from section 14.2.
+
+
+Question 3 (Section 15 - Passing parameter)
+Is JAVA a Pass by Value or a Pass by Reference programming language?
+
+Java is always pass by value. For a primitive parameter the value itself is
+copied. For an object parameter the value that is copied is the reference
+(the address of the object). The method receives a new local variable that
+points to the same object, not an alias of the caller's variable.
+
+Output of TestPassingParameter:
+    jungle dvd title: Jungle
+    cinderella dvd title: Cinderella
+    jungle dvd title: Cinderella
+
+a) After the call of swap(jungleDVD, cinderellaDVD), why does the title of
+these two objects still remain?
+When swap is called, o1 receives a copy of the reference in jungleDVD and
+o2 receives a copy of the reference in cinderellaDVD. The method swaps only
+these two local copies: o1 now points to Cinderella and o2 to Jungle. The
+variables jungleDVD and cinderellaDVD in main are not touched, and neither
+object is modified. When swap returns, o1, o2 and tmp disappear, so
+jungleDVD still points to "Jungle" and cinderellaDVD to "Cinderella". If Java
+were pass by reference, o1/o2 would be aliases of the caller's variables and
+the swap would be visible in main.
+
+b) After the call of changeTitle(jungleDVD, cinderellaDVD.getTitle()), why is
+the title of the JungleDVD changed?
+dvd receives a copy of the reference in jungleDVD, so dvd and jungleDVD point
+to the same object in memory.
+  - dvd.setTitle(title) follows that reference and changes the state of the
+    shared object: its title becomes "Cinderella". main sees this change
+    because it is the same object.
+  - dvd = new DigitalVideoDisc(oldTitle) only makes the local copy dvd point
+    to a new object. jungleDVD in main still points to the original object,
+    so the new DVD titled "Jungle" is lost when the method returns.
+So the method can change the object that the reference points to, but it
+cannot make the caller's variable point to another object. This is exactly
+pass by value where the value is a reference.
+
+
+Other notes
+-----------
+- Section 9 (accessors): DigitalVideoDisc has getters only, because the cart
+  has to display every piece of DVD information but no use case changes a DVD
+  after it is created. setTitle() exists only for the section 15 experiment.
+- Section 10: the constructors keep the argument order used by Aims.main in
+  the lab (title, category, [director], [length], cost).
+- Section 16: nbDigitalVideoDiscs is a class (static) member shared by all
+  DVDs; id is an instance member. Every constructor increases
+  nbDigitalVideoDiscs and assigns its new value to id, so ids are 1, 2, 3, ...
+- Reading assignment (When should accessor methods be used?): see
+  ReadingAssignment/GetterSetter_Mindmap.png (.pdf). Short answer: add an
+  accessor only when a use case needs the data (for example to display it or
+  to cross a UI/persistence boundary); otherwise ask the object to do the work
+  ("tell, don't ask"), and avoid setters that let callers skip the business
+  rules.
