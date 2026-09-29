@@ -1,0 +1,59 @@
+@startuml AIMS_Cart_ClassDiagram
+skinparam classAttributeIconSize 0
+skinparam shadowing false
+skinparam dpi 150
+skinparam classBackgroundColor #FFFFCC
+skinparam classBorderColor #000000
+hide circle
+
+class Aims {
+  + {static} main(args : String[]) : void
+}
+
+class Cart {
+  + {static} MAX_NUMBERS_ORDERED : int = 20 {readOnly}
+  - itemsOrdered : DigitalVideoDisc[MAX_NUMBERS_ORDERED]
+  - qtyOrdered : int = 0
+  + getQtyOrdered() : int
+  + addDigitalVideoDisc(disc : DigitalVideoDisc) : void
+  + addDigitalVideoDisc(dvdList : DigitalVideoDisc[]) : void
+  + addDigitalVideoDisc(dvd1 : DigitalVideoDisc, dvd2 : DigitalVideoDisc) : void
+  + removeDigitalVideoDisc(disc : DigitalVideoDisc) : void
+  + totalCost() : float
+  + print() : void
+}
+
+class DigitalVideoDisc {
+  - {static} nbDigitalVideoDiscs : int = 0
+  - id : int
+  - title : String
+  - category : String
+  - director : String
+  - length : int
+  - cost : float
+  + DigitalVideoDisc(title : String)
+  + DigitalVideoDisc(title : String, category : String, cost : float)
+  + DigitalVideoDisc(title : String, category : String, director : String, cost : float)
+  + DigitalVideoDisc(title : String, category : String, director : String, length : int, cost : float)
+  - assignId() : void
+  + {static} getNbDigitalVideoDiscs() : int
+  + getId() : int
+  + getTitle() : String
+  + setTitle(title : String) : void
+  + getCategory() : String
+  + getDirector() : String
+  + getLength() : int
+  + getCost() : float
+}
+
+class TestPassingParameter {
+  + {static} main(args : String[]) : void
+  + {static} swap(o1 : Object, o2 : Object) : void
+  + {static} changeTitle(dvd : DigitalVideoDisc, title : String) : void
+}
+
+Cart o--> "0..20\nitemsOrdered" DigitalVideoDisc
+Aims ..> Cart : <<create>>
+Aims ..> DigitalVideoDisc : <<create>>
+TestPassingParameter ..> DigitalVideoDisc
+@enduml
