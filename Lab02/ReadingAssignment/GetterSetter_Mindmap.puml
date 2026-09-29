@@ -1,0 +1,39 @@
+@startmindmap GetterSetter_Mindmap
+skinparam dpi 150
+* When should accessor methods be used?\n(Holub, "Why getter and setter methods are evil", JavaWorld 2003)
+** Core problem
+*** Getters/setters expose implementation details
+**** A private field + public get/set ≈ a public field
+**** Change a field's type → every caller breaks
+*** They break encapsulation & increase coupling
+*** Symptom of procedural thinking in OO code\n(data-centric design, "anemic" objects)
+** Holub's principles
+*** "Don't ask for the information you need to do the work;\nask the object that has the information to do the work for you"
+*** Design from use cases / behaviour (CRC cards),\nnot from data (fields first)
+*** Minimise data movement between objects
+*** Prefer methods like cart.totalCost(), account.deposit(x)\nover getBalance()/setBalance()
+** Related principles (other sources)
+*** Tell, Don't Ask (Martin Fowler / Pragmatic Programmers)
+*** Law of Demeter: talk only to immediate collaborators
+*** Effective Java (Bloch)
+**** Item 16: public classes → accessors, not public fields
+**** Item 17: minimise mutability → avoid setters
+*** Clean Code (R. Martin): objects hide data & expose behaviour;\ndata structures expose data & have no behaviour
+left side
+** When accessors ARE acceptable
+*** Required by the business/use case\n(AIMS: cart must display title, category, cost… → getters)
+*** At system boundaries
+**** UI / presentation layer
+**** Persistence, serialization (JPA, JSON)
+**** DTOs / JavaBeans frameworks & tools
+*** Getter returns an interface or immutable value,\nnot the internal representation
+*** Value objects / records (read-only data)
+** When to AVOID them
+*** Auto-generating get/set for every field
+*** Setters that let callers bypass business rules\n(e.g. setBalance instead of credit/debit)
+*** Getters returning mutable internals\n(return a copy or an unmodifiable view)
+** Conclusion
+*** Accessors are not evil by themselves;\nunjustified accessors are
+*** Add an accessor only when a use case needs it;\nprefer behaviour-rich methods
+*** Lab02 choice: DVD has getters only;\nsetTitle() is temporary for the pass-by-value test
+@endmindmap
