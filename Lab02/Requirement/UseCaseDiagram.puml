@@ -1,0 +1,75 @@
+@startuml AIMS_UseCase
+left to right direction
+skinparam packageStyle rectangle
+skinparam shadowing false
+skinparam dpi 150
+skinparam usecaseBackgroundColor #FFFFCC
+skinparam usecaseBorderColor #000000
+skinparam actorBackgroundColor #FFFFCC
+skinparam actorBorderColor #000000
+actor Customer
+actor "Store Manager" as Manager
+actor "Card Association\nSystem" as Bank
+actor "Email System" as Mail
+
+rectangle AIMS {
+  usecase "View store\n(list DVDs, latest first)" as UC_View
+  usecase "Search DVDs" as UC_Search
+  usecase "Search by title" as UC_ST
+  usecase "Search by category" as UC_SC
+  usecase "Search by price" as UC_SP
+  usecase "View DVD details" as UC_Detail
+  usecase "Play DVD" as UC_Play
+  usecase "Add DVD to cart" as UC_Add
+  usecase "View cart" as UC_Cart
+  usecase "Sort DVDs in cart\n(by title / by cost)" as UC_Sort
+  usecase "Update DVD quantity\nin cart" as UC_Qty
+  usecase "Remove DVD from cart" as UC_Remove
+  usecase "Get a lucky item\n(free item)" as UC_Lucky
+  usecase "Filter DVDs in cart\n(by ID / by title)" as UC_Filter
+  usecase "Place order" as UC_Order
+  usecase "Enter delivery info\n& instructions" as UC_Deliv
+  usecase "Calculate delivery fee" as UC_Fee
+  usecase "Pay order\n(credit card)" as UC_Pay
+  usecase "Send order & transaction\ninfo by email" as UC_Email
+  usecase "Log in" as UC_Login
+  usecase "View pending orders" as UC_Pending
+  usecase "Approve / Reject order" as UC_Approve
+  usecase "Add DVD to store" as UC_AddStore
+  usecase "Remove DVD from store" as UC_RemStore
+}
+
+Customer -- UC_Search
+Customer -- UC_View
+Customer -- UC_Detail
+Customer -- UC_Play
+Customer -- UC_Add
+Customer -- UC_Cart
+Customer -- UC_Sort
+Customer -- UC_Qty
+Customer -- UC_Remove
+Customer -- UC_Lucky
+Customer -- UC_Filter
+Customer -- UC_Order
+
+UC_ST --|> UC_Search
+UC_SC --|> UC_Search
+UC_SP --|> UC_Search
+
+UC_Order ..> UC_Deliv : <<include>>
+UC_Order ..> UC_Fee : <<include>>
+UC_Order ..> UC_Pay : <<include>>
+UC_Pay -- Bank
+UC_Pay ..> UC_Email : <<include>>
+UC_Email -- Mail
+
+UC_Pending ..> UC_Login : <<include>>
+UC_AddStore ..> UC_Login : <<include>>
+UC_RemStore ..> UC_Login : <<include>>
+UC_Approve ..> UC_Pending : <<extend>>
+
+UC_Pending -- Manager
+UC_Approve -- Manager
+UC_AddStore -- Manager
+UC_RemStore -- Manager
+@enduml
